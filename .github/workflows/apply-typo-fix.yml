@@ -1,0 +1,30 @@
+name: Apply documentation typo fix
+on:
+  push:
+    branches: [docs/fix-occurred-typo]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Correct spelling
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('tensorflow_lite_support/metadata/python/metadata.py')
+          text = path.read_text()
+          old = 'ValueError: error occured when parsing the metadata schema file.'
+          new = 'ValueError: error occurred when parsing the metadata schema file.'
+          if old not in text:
+              raise SystemExit('Expected typo not found')
+          path.write_text(text.replace(old, new))
+          PY
+          rm .github/workflows/apply-typo-fix.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tensorflow_lite_support/metadata/python/metadata.py .github/workflows/apply-typo-fix.yml
+          git commit -m "docs: fix occurred spelling"
+          git push
