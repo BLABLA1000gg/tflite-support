@@ -801,7 +801,7 @@ def convert_to_json(metadata_buffer):
     Metadata in JSON format.
 
   Raises:
-    ValueError: error occured when parsing the metadata schema file.
+    ValueError: error occurred when parsing the metadata schema file.
   """
 
   opt = _pywrap_flatbuffers.IDLOptions()
